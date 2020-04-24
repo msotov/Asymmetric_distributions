@@ -4,7 +4,7 @@ from scipy.stats import skewnorm, norm
 from scipy.integrate import quad
 
 def integrand(x, mu, sigma, alpha):
-    return skewnorm.pdf(x, a = alpha, loc = mu, scale = sigma)
+    return skewnorm.pdf(x, a=alpha, loc=mu, scale=sigma)
 
 def fnc2min(params, x, data):
     mu = params['mu']
@@ -30,11 +30,11 @@ def asymmetric_samples(mean, plus, minus, size = 5000):
     data = np.array([0.16, 0.5, 0.84])
     
     params = Parameters()
-    params.add('mu', value = mean)
-    params.add('sigma', value = np.mean([minus, plus]))
-    params.add('alpha', value = 0.0)
+    params.add('mu', value=mean)
+    params.add('sigma', value=np.mean([minus, plus]))
+    params.add('alpha', value=0.0)
     
-    print params['mu'].value, params['sigma'].value, params['alpha'].value
+    #print(params['mu'].value, params['sigma'].value, params['alpha'].value)
     
     try:
     
@@ -45,10 +45,9 @@ def asymmetric_samples(mean, plus, minus, size = 5000):
         sigma = result.params['sigma'].value
         alpha = result.params['alpha'].value
     
-        samples = skewnorm.rvs(a = alpha, loc = mu, scale = sigma, size = size)
+        samples = skewnorm.rvs(a=alpha, loc=mu, scale=sigma, size=size)
     
     except ValueError:
-        
         samples = norm.rvs(loc=mean, scale=np.mean([minus, plus]), size=size)
     
     return samples
