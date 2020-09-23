@@ -1,5 +1,5 @@
-from lmfit import minimize, Minimizer, Parameters
 import numpy as np
+from lmfit import minimize, Minimizer, Parameters
 from scipy.stats import skewnorm, norm
 from scipy.integrate import quad
 
@@ -21,7 +21,7 @@ def fnc2min(params, x, data):
     
     return r
 
-def asymmetric_samples(mean, plus, minus, size = 5000):
+def asymmetric_samples(mean, plus, minus, size=5000):
     if (plus == 0.0) and (minus == 0.0):
         samples = np.ones(size)*mean
         return samples
@@ -34,10 +34,7 @@ def asymmetric_samples(mean, plus, minus, size = 5000):
     params.add('sigma', value=np.mean([minus, plus]))
     params.add('alpha', value=0.0)
     
-    #print(params['mu'].value, params['sigma'].value, params['alpha'].value)
-    
     try:
-    
         minner = Minimizer(fnc2min, params, fcn_args=(x, data))
         result = minner.minimize()
     
@@ -48,6 +45,9 @@ def asymmetric_samples(mean, plus, minus, size = 5000):
         samples = skewnorm.rvs(a=alpha, loc=mu, scale=sigma, size=size)
     
     except ValueError:
+        print("Problem producing the distribution ot sampling from it.")
+        print("\nReversing to a Normal Distribution")
+        print("\nwith scale given by the average between the maximum and minimum errors.")
         samples = norm.rvs(loc=mean, scale=np.mean([minus, plus]), size=size)
     
     return samples
